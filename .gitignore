@@ -1,10 +1,43 @@
-# Python-generated files
+# macOS system files
+.DS_Store
+.Trashes
+
+# Python bytecode and build artifacts
 __pycache__/
-*.py[oc]
-build/
+*.pyc
+*.pyo
+*.pyd
+*.py[co]
+*.so
+*.egg
+*.egg-info/
 dist/
+build/
 wheels/
-*.egg-info
 
 # Virtual environments
-.venv
+.venv/
+venv/
+ENV/
+env/
+
+# Editor/IDE files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Environment and secrets
+.env
+.env.*
+
+# Test/coverage outputs
+.coverage
+htmlcov/
+.tox/
+.nox/
+.cache/
+pytest_cache/
+
+# Existing project-specific ignores
+# (leave below for any further custom additions)
