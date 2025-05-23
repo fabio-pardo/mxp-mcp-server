@@ -2,6 +2,50 @@
 
 A template for creating a Model Context Protocol (MCP) server that can be deployed in a container.
 
+## Usage
+
+### Endpoints
+- `GET /` — Health check, returns server status
+- `GET /healthz` — Health check, returns OK
+- `POST /mcp` — Main MCP endpoint (accepts JSON with action and parameters)
+
+### Example: List Resources
+```
+POST /mcp
+{
+  "action": "list_resources",
+  "parameters": {}
+}
+```
+
+### Example: Read Resource (Account)
+```
+POST /mcp
+{
+  "action": "read_resource",
+  "parameters": {
+    "resource_type": "account",
+    "charge_id": 10000004
+  }
+}
+```
+
+### Running the Server (Docker)
+1. Build the container:
+   ```sh
+   docker build -t mxp-mcp-server .
+   ```
+2. Run the container:
+   ```sh
+   docker run -p 8000:8000 mxp-mcp-server
+   ```
+3. The server will be available at `http://localhost:8000/`
+
+### OpenAPI Docs
+FastAPI automatically provides OpenAPI docs at:
+- `http://localhost:8000/docs` (Swagger UI)
+- `http://localhost:8000/redoc` (ReDoc)
+
 ## What is an MCP Server?
 
 The Model Context Protocol (MCP) is a standard that connects AI systems with external tools and data sources. MCP servers extend AI capabilities by providing access to specialized functions, external information, and services.
