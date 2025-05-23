@@ -2,6 +2,26 @@
 """
 MCP Server Template
 A basic template for creating a Model Context Protocol (MCP) server.
+
+Endpoints:
+    GET  /              - Health check, returns server status
+    GET  /healthz       - Health check, returns OK
+    POST /mcp           - Main MCP endpoint. Accepts MCPRequest (action, parameters, context)
+
+Example MCPRequest for listing resources:
+{
+    "action": "list_resources",
+    "parameters": {}
+}
+
+Example MCPRequest for reading a resource (account):
+{
+    "action": "read_resource",
+    "parameters": {
+        "resource_type": "account",
+        "charge_id": 10000004
+    }
+}
 """
 
 import logging
@@ -59,18 +79,28 @@ class MCPResponse(BaseModel):
     metadata: Optional[Dict[str, Any]] = Field(default=None, description="Additional metadata")
 
 # Define routes
-@app.get("/")
+@app.get("/", summary="Root endpoint", tags=["Health"])
 async def root():
+    """Root endpoint. Returns server running status."""
     return {"message": "MCP Server is running"}
 
-@app.get("/healthz")
+@app.get("/healthz", summary="Health check", tags=["Health"])
 async def health_check():
+    """Health check endpoint. Returns OK if server is healthy."""
     return {"status": "healthy"}
 
-@app.post("/mcp", response_model=MCPResponse)
+@app.post("/mcp", response_model=MCPResponse, summary="MCP action endpoint", tags=["MCP"])
 async def handle_mcp_request(request: MCPRequest):
     """
-    Handle MCP requests.
+    Main MCP endpoint. Accepts an MCPRequest with an action and parameters.
+    Supported actions:
+        - list_resources: Returns available MXP resource types.
+        - read_resource: Fetches a resource from MXP by type and ID.
+    Example:
+        {
+            "action": "read_resource",
+            "parameters": {"resource_type": "account", "charge_id": 10000004}
+        }
     """
     try:
         action = request.action
