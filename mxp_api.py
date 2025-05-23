@@ -1,9 +1,14 @@
+import os
 import requests
 from requests.auth import HTTPBasicAuth
+from dotenv import load_dotenv
 
-MXP_BASE_URL = os.getenv("MXP_BASE_URL", "http://localhost/api")
-MXP_USERNAME = os.getenv("MXP_USERNAME", "username")
-MXP_PASSWORD = os.getenv("MXP_PASSWORD", "password")
+# Load environment variables from .env file
+load_dotenv()
+
+MXP_BASE_URL = os.getenv('MXP_BASE_URL', 'http://localhost/api')
+MXP_USERNAME = os.getenv('MXP_USERNAME', 'username')
+MXP_PASSWORD = os.getenv('MXP_PASSWORD', 'password')
 
 def get_account(charge_id):
     """Call the MXP /account/GET endpoint with the given charge_id."""

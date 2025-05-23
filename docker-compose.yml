@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  mxp-mcp-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - MXP_BASE_URL=${MXP_BASE_URL}
+      - MXP_USERNAME=${MXP_USERNAME}
+      - MXP_PASSWORD=${MXP_PASSWORD}
+    env_file:
+      - .env
+    volumes:
+      - .:/app
