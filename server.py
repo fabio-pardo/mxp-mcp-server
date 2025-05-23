@@ -311,6 +311,7 @@ async def list_tools():
     ]
     return {"tools": tools}
 
+mcp.setup_server()
 
 @app.post("/debug")
 async def debug_endpoint(request: Request):
