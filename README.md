@@ -50,9 +50,9 @@ The server uses environment variables for configuration which can be set in a `.
 
 ```sh
 # .env file example
-MXP_BASE_URL=http://***REMOVED***/API/***REMOVED***
-MXP_USERNAME=***REMOVED***
-MXP_PASSWORD=***REMOVED***
+MXP_BASE_URL=http://api.example.com/mxp/api
+MXP_USERNAME=example_user
+MXP_PASSWORD=example_password
 ```
 
 Key environment variables:
