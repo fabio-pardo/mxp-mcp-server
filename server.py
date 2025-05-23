@@ -105,7 +105,6 @@ async def handle_mcp_request(request: MCPRequest):
     try:
         action = request.action
         parameters = request.parameters
-        context = request.context
 
         logger.info(f"Received action: {action}")
         
