@@ -30,6 +30,7 @@ env/
 # Environment and secrets
 .env
 .env.*
+!.env.example
 
 # Test/coverage outputs
 .coverage
