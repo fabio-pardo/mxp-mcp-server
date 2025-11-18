@@ -45,11 +45,11 @@ read -p "Enter your choice (1-3): " choice
 case $choice in
 1)
   echo "🤖 Starting MCP Server..."
-  python src/mcp_server/server.py --transport stdio
+  PYTHONPATH="${PYTHONPATH:+${PYTHONPATH}:}$(pwd)/src" python src/mcp_server/server.py --transport stdio
   ;;
 2)
   echo "🌐 Starting REST API Server..."
-  python src/rest_api/server.py
+  PYTHONPATH="${PYTHONPATH:+${PYTHONPATH}:}$(pwd)/src" python src/rest_api/server.py
   ;;
 3)
   echo "🐳 Starting with Docker..."

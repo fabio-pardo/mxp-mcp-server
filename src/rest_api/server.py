@@ -16,7 +16,8 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 # Import MXP client functions
-sys.path.insert(0, "/Users/fabio/dev/virgin_voyages/mxp-mcp-server/src")
+# Add the parent directory to the path to enable imports
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from shared.mxp_client import (
     get_account,
     get_crew,
@@ -202,4 +203,6 @@ if __name__ == "__main__":
     import uvicorn
 
     port = int(os.environ.get("PORT", 8000))
-    uvicorn.run("src.rest_api.server:app", host="0.0.0.0", port=port, reload=True)
+    # Run without reload to avoid module path issues
+    # For development with reload, use: PYTHONPATH=. uvicorn src.rest_api.server:app --reload
+    uvicorn.run(app, host="0.0.0.0", port=port, reload=False)

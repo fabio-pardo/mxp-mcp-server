@@ -1,11 +1,13 @@
 [project]
 name = "mcp-server"
 version = "0.1.0"
-description = "Add your description here"
+description = "Virgin Voyages MXP MCP Server with Database Access"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "fastapi-mcp>=0.3.4",
+    "pyodbc>=5.0.0",
+    "python-dotenv>=1.0.0",
 ]
 
 [tool.basedpyright]

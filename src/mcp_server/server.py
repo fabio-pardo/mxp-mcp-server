@@ -11,13 +11,15 @@ The server supports multiple transports:
 - sse: For browser-based clients
 """
 
+import os
 import sys
 from typing import Any
 
 from mcp.server.fastmcp import FastMCP
 
 # Import MXP client functions
-sys.path.insert(0, "/Users/fabio/dev/virgin_voyages/mxp-mcp-server/src")
+# Add the parent directory to the path to enable imports
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from shared.mxp_client import (
     get_account,
     get_crew,
