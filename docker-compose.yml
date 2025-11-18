@@ -1,17 +1,24 @@
-version: '3'
+version: '3.8'
 
 services:
-  mxp-mcp-server:
-    build:
-      context: .
-      dockerfile: Dockerfile
+  # REST API Server
+  rest-api:
+    build: .
+    container_name: mxp-rest-api
     ports:
       - "8000:8000"
-    environment:
-      - MXP_BASE_URL=${MXP_BASE_URL}
-      - MXP_USERNAME=${MXP_USERNAME}
-      - MXP_PASSWORD=${MXP_PASSWORD}
     env_file:
       - .env
-    volumes:
-      - .:/app
+    command: ["uv", "run", "python", "src/rest_api/server.py"]
+    restart: unless-stopped
+
+  # MCP Server (streamable-http)
+  mcp-server:
+    build: .
+    container_name: mxp-mcp-server
+    ports:
+      - "8001:8000"
+    env_file:
+      - .env
+    command: ["uv", "run", "uvicorn", "src.mcp_server.server:mcp.streamable_http_app", "--host", "0.0.0.0", "--port", "8000"]
+    restart: unless-stopped

@@ -1,3 +1,10 @@
+"""
+Virgin Voyages MXP API Client.
+
+This module provides a Python client for interacting with the Virgin Voyages MXP system.
+All functions communicate with the MXP backend using HTTP Basic Authentication.
+"""
+
 import os
 from typing import Any
 
@@ -14,7 +21,15 @@ MXP_PASSWORD = os.getenv("MXP_PASSWORD", "password")
 
 
 def get_account(charge_id: int) -> dict[str, Any]:
-    """Call the MXP /account/GET endpoint with the given charge_id."""
+    """
+    Get account information by charge ID.
+
+    Args:
+        charge_id: The charge ID to look up
+
+    Returns:
+        Account information from MXP system
+    """
     url = f"{MXP_BASE_URL}/account"
     params = {"charge_id": charge_id}
     response = requests.get(
@@ -25,7 +40,12 @@ def get_account(charge_id: int) -> dict[str, Any]:
 
 
 def get_crew() -> dict[str, Any]:
-    """Call the MXP /crew/GET endpoint to retrieve crew information."""
+    """
+    Get crew information.
+
+    Returns:
+        Crew information from MXP system
+    """
     url = f"{MXP_BASE_URL}/crew"
     response = requests.get(url, auth=HTTPBasicAuth(MXP_USERNAME, MXP_PASSWORD))
     response.raise_for_status()
@@ -33,7 +53,15 @@ def get_crew() -> dict[str, Any]:
 
 
 def get_folio(folio_id: int) -> dict[str, Any]:
-    """Call the MXP /folio/GET endpoint with the given folio_id."""
+    """
+    Get folio information by folio ID.
+
+    Args:
+        folio_id: The folio ID to look up
+
+    Returns:
+        Folio information from MXP system
+    """
     url = f"{MXP_BASE_URL}/folio"
     params = {"folio_id": folio_id}
     response = requests.get(
@@ -44,7 +72,15 @@ def get_folio(folio_id: int) -> dict[str, Any]:
 
 
 def get_document(document_id: int) -> dict[str, Any]:
-    """Call the MXP /document/GET endpoint with the given document_id."""
+    """
+    Get document information by document ID.
+
+    Args:
+        document_id: The document ID to look up
+
+    Returns:
+        Document information from MXP system
+    """
     url = f"{MXP_BASE_URL}/document"
     params = {"document_id": document_id}
     response = requests.get(
@@ -55,7 +91,15 @@ def get_document(document_id: int) -> dict[str, Any]:
 
 
 def get_icafe(icafe_id: int | None = None) -> dict[str, Any]:
-    """Call the MXP /iCafe/GET endpoint. Optionally filter by icafe_id."""
+    """
+    Get iCafe information, optionally filtered by icafe_id.
+
+    Args:
+        icafe_id: Optional iCafe ID to filter by
+
+    Returns:
+        iCafe information from MXP system
+    """
     url = f"{MXP_BASE_URL}/iCafe"
     params = {"icafe_id": icafe_id} if icafe_id is not None else None
     response = requests.get(
@@ -66,7 +110,15 @@ def get_icafe(icafe_id: int | None = None) -> dict[str, Any]:
 
 
 def get_person_image_by_id(person_id: int) -> dict[str, Any]:
-    """Call the MXP /personImageById/GET endpoint with the given person_id."""
+    """
+    Get person image by person ID.
+
+    Args:
+        person_id: The person ID to look up
+
+    Returns:
+        Person image information from MXP system
+    """
     url = f"{MXP_BASE_URL}/personImageById"
     params = {"person_id": person_id}
     response = requests.get(
@@ -77,7 +129,12 @@ def get_person_image_by_id(person_id: int) -> dict[str, Any]:
 
 
 def get_quick_code() -> dict[str, Any]:
-    """Call the MXP /quickCode/GET endpoint."""
+    """
+    Get quick code information.
+
+    Returns:
+        Quick code information from MXP system
+    """
     url = f"{MXP_BASE_URL}/quickCode"
     response = requests.get(url, auth=HTTPBasicAuth(MXP_USERNAME, MXP_PASSWORD))
     response.raise_for_status()
@@ -85,7 +142,12 @@ def get_quick_code() -> dict[str, Any]:
 
 
 def get_sailor_manifest() -> dict[str, Any]:
-    """Call the MXP /sailorManifest/GET endpoint."""
+    """
+    Get sailor manifest information.
+
+    Returns:
+        Sailor manifest information from MXP system
+    """
     url = f"{MXP_BASE_URL}/sailorManifest"
     response = requests.get(url, auth=HTTPBasicAuth(MXP_USERNAME, MXP_PASSWORD))
     response.raise_for_status()
@@ -93,7 +155,15 @@ def get_sailor_manifest() -> dict[str, Any]:
 
 
 def get_receipt_image(receipt_id: int) -> dict[str, Any]:
-    """Call the MXP /receiptImage/GET endpoint with the given receipt_id."""
+    """
+    Get receipt image by receipt ID.
+
+    Args:
+        receipt_id: The receipt ID to look up
+
+    Returns:
+        Receipt image information from MXP system
+    """
     url = f"{MXP_BASE_URL}/receiptImage"
     params = {"receipt_id": receipt_id}
     response = requests.get(
@@ -104,7 +174,15 @@ def get_receipt_image(receipt_id: int) -> dict[str, Any]:
 
 
 def get_person_invoice(person_id: int) -> dict[str, Any]:
-    """Call the MXP /personInvoice/GET endpoint with the given person_id."""
+    """
+    Get person invoice by person ID.
+
+    Args:
+        person_id: The person ID to look up
+
+    Returns:
+        Person invoice information from MXP system
+    """
     url = f"{MXP_BASE_URL}/personInvoice"
     params = {"person_id": person_id}
     response = requests.get(
