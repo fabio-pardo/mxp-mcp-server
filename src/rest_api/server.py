@@ -89,32 +89,34 @@ async def account(charge_id: int) -> dict[str, Any]:
 
 
 @app.get("/crew", tags=["MXP"])
-async def crew() -> dict[str, Any]:
-    """Get crew information"""
+async def crew(pin: int | None = None) -> dict[str, Any]:
+    """Get crew information, optionally filtered by PIN"""
     try:
-        result = get_crew()
+        result = get_crew(pin)
         return result
     except Exception as e:
         logger.error(f"Error getting crew: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.get("/folio/{folio_id}", tags=["MXP"])
-async def folio(folio_id: int) -> dict[str, Any]:
-    """Get folio information by folio ID"""
+@app.get("/folio/{charge_id}", tags=["MXP"])
+async def folio(
+    charge_id: int, date_from: str | None = None, date_to: str | None = None
+) -> dict[str, Any]:
+    """Get folio information by charge ID with optional date filters"""
     try:
-        result = get_folio(folio_id)
+        result = get_folio(charge_id, date_from, date_to)
         return result
     except Exception as e:
         logger.error(f"Error getting folio: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.get("/document/{document_id}", tags=["MXP"])
-async def document(document_id: int) -> dict[str, Any]:
-    """Get document information by document ID"""
+@app.get("/document/{id}", tags=["MXP"])
+async def document(id: str) -> dict[str, Any]:
+    """Get document information by document ID (GUID)"""
     try:
-        result = get_document(document_id)
+        result = get_document(id)
         return result
     except Exception as e:
         logger.error(f"Error getting document: {str(e)}")
@@ -122,21 +124,26 @@ async def document(document_id: int) -> dict[str, Any]:
 
 
 @app.get("/icafe", tags=["MXP"])
-async def icafe(icafe_id: int | None = None) -> dict[str, Any]:
-    """Get iCafe information, optionally filtered by iCafe ID"""
+async def icafe(
+    room_nr: str | None = None,
+    date_of_birth: str | None = None,
+    last_name: str | None = None,
+    pin: int | None = None,
+) -> dict[str, Any]:
+    """Get iCafe information for guests (room_nr, date_of_birth) or crew (pin, last_name)"""
     try:
-        result = get_icafe(icafe_id)
+        result = get_icafe(room_nr, date_of_birth, last_name, pin)
         return result
     except Exception as e:
         logger.error(f"Error getting iCafe: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.get("/person-image/{person_id}", tags=["MXP"])
-async def person_image(person_id: int) -> dict[str, Any]:
+@app.get("/person-image/{id}", tags=["MXP"])
+async def person_image(id: int) -> dict[str, Any]:
     """Get person image by person ID"""
     try:
-        result = get_person_image_by_id(person_id)
+        result = get_person_image_by_id(id)
         return result
     except Exception as e:
         logger.error(f"Error getting person image: {str(e)}")
@@ -155,32 +162,36 @@ async def quick_code() -> dict[str, Any]:
 
 
 @app.get("/sailor-manifest", tags=["MXP"])
-async def sailor_manifest() -> dict[str, Any]:
+async def sailor_manifest(
+    installation_code: str, voyage_embark_date: str, voyage_debark_date: str
+) -> dict[str, Any]:
     """Get sailor manifest information"""
     try:
-        result = get_sailor_manifest()
+        result = get_sailor_manifest(
+            installation_code, voyage_embark_date, voyage_debark_date
+        )
         return result
     except Exception as e:
         logger.error(f"Error getting sailor manifest: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.get("/receipt-image/{receipt_id}", tags=["MXP"])
-async def receipt_image(receipt_id: int) -> dict[str, Any]:
-    """Get receipt image by receipt ID"""
+@app.get("/receipt-image/{check_number}/{bu_id}", tags=["MXP"])
+async def receipt_image(check_number: int, bu_id: int) -> dict[str, Any]:
+    """Get receipt image by check number and business unit ID"""
     try:
-        result = get_receipt_image(receipt_id)
+        result = get_receipt_image(check_number, bu_id)
         return result
     except Exception as e:
         logger.error(f"Error getting receipt image: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.get("/person-invoice/{person_id}", tags=["MXP"])
-async def person_invoice(person_id: int) -> dict[str, Any]:
-    """Get person invoice by person ID"""
+@app.get("/person-invoice/{charge_id}", tags=["MXP"])
+async def person_invoice(charge_id: int) -> dict[str, Any]:
+    """Get person invoice by charge ID"""
     try:
-        result = get_person_invoice(person_id)
+        result = get_person_invoice(charge_id)
         return result
     except Exception as e:
         logger.error(f"Error getting person invoice: {str(e)}")

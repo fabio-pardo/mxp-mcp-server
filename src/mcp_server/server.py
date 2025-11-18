@@ -58,70 +58,88 @@ def get_account_info(charge_id: int) -> dict[str, Any]:
 
 
 @mcp.tool()
-def get_crew_info() -> dict[str, Any]:
+def get_crew_info(pin: int | None = None) -> dict[str, Any]:
     """
-    Get crew information from the MXP system.
+    Get crew information from the MXP system, optionally filtered by PIN.
+
+    Args:
+        pin: Optional PIN to filter by specific crew member
 
     Returns:
         Information about crew members including names, roles, and assignments
     """
-    return get_crew()
+    return get_crew(pin)
 
 
 @mcp.tool()
-def get_folio_info(folio_id: int) -> dict[str, Any]:
+def get_folio_info(
+    charge_id: int, date_from: str | None = None, date_to: str | None = None
+) -> dict[str, Any]:
     """
-    Get folio information by folio ID from the MXP system.
+    Get folio information by charge ID from the MXP system.
 
     Args:
-        folio_id: The folio ID to look up
+        charge_id: The charge ID to look up
+        date_from: Optional start date (ISO 8601 format: YYYY-MM-DD)
+        date_to: Optional end date (ISO 8601 format: YYYY-MM-DD)
 
     Returns:
         Folio information including charges, payments, and balance
     """
-    return get_folio(folio_id)
+    return get_folio(charge_id, date_from, date_to)
 
 
 @mcp.tool()
-def get_document_info(document_id: int) -> dict[str, Any]:
+def get_document_info(id: str) -> dict[str, Any]:
     """
-    Get document information by document ID from the MXP system.
+    Get document information by document ID (GUID) from the MXP system.
 
     Args:
-        document_id: The document ID to look up
+        id: The document GUID to look up
 
     Returns:
         Document information including type, status, and content
     """
-    return get_document(document_id)
+    return get_document(id)
 
 
 @mcp.tool()
-def get_icafe_info(icafe_id: int | None = None) -> dict[str, Any]:
+def get_icafe_info(
+    room_nr: str | None = None,
+    date_of_birth: str | None = None,
+    last_name: str | None = None,
+    pin: int | None = None,
+) -> dict[str, Any]:
     """
-    Get iCafe information from the MXP system, optionally filtered by iCafe ID.
+    Get iCafe package information from the MXP system.
+
+    For guests, use room_nr and date_of_birth.
+    For crew, use pin and last_name.
 
     Args:
-        icafe_id: Optional iCafe ID to filter results
+        room_nr: Room number (for guests)
+        date_of_birth: Date of birth in ISO 8601 format (for guests)
+        last_name: Last name (for crew)
+        pin: Person ID (for crew)
 
     Returns:
-        iCafe session information including usage, time, and location
+        iCafe package information including usage, time, and location
     """
-    return get_icafe(icafe_id)
+    return get_icafe(room_nr, date_of_birth, last_name, pin)
 
 
 @mcp.tool()
-def get_person_image(person_id: int) -> dict[str, Any]:
+def get_person_image(id: int) -> dict[str, Any]:
     """
     Get person image information by person ID from the MXP system.
 
     Args:
-        person_id: The person ID to look up
+        id: The MXP internal person identifier
 
     Returns:
         Person image data including URL and metadata
     """
-    return get_person_image_by_id(person_id)
+    return get_person_image_by_id(id)
 
 
 @mcp.tool()
@@ -136,42 +154,52 @@ def get_quick_code_info() -> dict[str, Any]:
 
 
 @mcp.tool()
-def get_manifest_info() -> dict[str, Any]:
+def get_manifest_info(
+    installation_code: str, voyage_embark_date: str, voyage_debark_date: str
+) -> dict[str, Any]:
     """
     Get sailor manifest information from the MXP system.
+
+    Args:
+        installation_code: Ship/installation code
+        voyage_embark_date: Voyage embark date (ISO 8601 format: YYYY-MM-DD)
+        voyage_debark_date: Voyage debark date (ISO 8601 format: YYYY-MM-DD)
 
     Returns:
         Sailor manifest including passenger lists and cabin assignments
     """
-    return get_sailor_manifest()
+    return get_sailor_manifest(
+        installation_code, voyage_embark_date, voyage_debark_date
+    )
 
 
 @mcp.tool()
-def get_receipt_image_info(receipt_id: int) -> dict[str, Any]:
+def get_receipt_image_info(check_number: int, bu_id: int) -> dict[str, Any]:
     """
-    Get receipt image information by receipt ID from the MXP system.
+    Get receipt image information by check number and business unit ID from the MXP system.
 
     Args:
-        receipt_id: The receipt ID to look up
+        check_number: The check number to look up
+        bu_id: Business unit identifier
 
     Returns:
         Receipt image data including URL and transaction details
     """
-    return get_receipt_image(receipt_id)
+    return get_receipt_image(check_number, bu_id)
 
 
 @mcp.tool()
-def get_person_invoice_info(person_id: int) -> dict[str, Any]:
+def get_person_invoice_info(charge_id: int) -> dict[str, Any]:
     """
-    Get person invoice information by person ID from the MXP system.
+    Get person invoice information by charge ID from the MXP system.
 
     Args:
-        person_id: The person ID to look up
+        charge_id: The charge ID to look up
 
     Returns:
-        Person invoice including charges, payments, and balance
+        Person invoice PDF including charges, payments, and balance
     """
-    return get_person_invoice(person_id)
+    return get_person_invoice(charge_id)
 
 
 # =============================================================================
@@ -212,22 +240,28 @@ def get_tool_help() -> str:
     - Example: get_account_info(10000004)
     
     Folio Information:
-    - Use get_folio_info(folio_id) to access folio data
+    - Use get_folio_info(charge_id, date_from, date_to) to access folio data
     - Folios contain charge and payment information
+    - Example: get_folio_info(10000004, "2024-01-01", "2024-01-31")
     
     Document Access:
-    - Use get_document_info(document_id) to retrieve documents
+    - Use get_document_info(id) to retrieve documents by GUID
     - Documents include receipts, confirmations, etc.
+    - Example: get_document_info("82056F48-D00B-40AB-9D18-029E1FA67EFF")
     
     Personnel Information:
-    - get_crew_info() for crew member data
-    - get_person_image(person_id) for person photos
-    - get_person_invoice_info(person_id) for invoices
+    - get_crew_info(pin) for crew member data (optional PIN filter)
+    - get_person_image(id) for person photos by person ID
+    - get_person_invoice_info(charge_id) for invoices by charge ID
     
     Passenger Services:
-    - get_icafe_info() for internet cafe usage
-    - get_manifest_info() for passenger manifests
+    - get_icafe_info(room_nr, date_of_birth, last_name, pin) for internet cafe packages
+      * For guests: use room_nr and date_of_birth
+      * For crew: use pin and last_name
+    - get_manifest_info(installation_code, voyage_embark_date, voyage_debark_date)
+      for passenger manifests
     - get_quick_code_info() for quick access codes
+    - get_receipt_image_info(check_number, bu_id) for receipt images
     """
 
 
@@ -252,10 +286,10 @@ def analyze_account(charge_id: int) -> str:
 
 
 @mcp.prompt()
-def review_folio(folio_id: int) -> str:
+def review_folio(charge_id: int) -> str:
     """Generate a prompt to review a folio."""
     return f"""
-    Please review the folio with ID {folio_id}.
+    Please review the folio for charge ID {charge_id}.
     
     Use the get_folio_info tool to retrieve the folio details, then provide:
     1. Total charges breakdown
