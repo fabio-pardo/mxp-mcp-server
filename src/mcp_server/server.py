@@ -13,7 +13,7 @@ The server supports multiple transports:
 
 import os
 import sys
-from typing import Any
+from typing import Any, List, Dict
 
 from mcp.server.fastmcp import FastMCP
 
@@ -32,12 +32,29 @@ from shared.mxp_client import (
     get_receipt_image,
     get_sailor_manifest,
 )
+from shared import db_client
 
 # Initialize MCP server
 mcp = FastMCP(
     "Virgin Voyages MXP",
     description="MCP server providing access to Virgin Voyages MXP system data",
 )
+
+
+@mcp.tool()
+def execute_read_only_query(query: str, params: tuple = ()) -> List[Dict[str, Any]]:
+    """
+    Executes a read-only SQL SELECT query and returns results as a list of dictionaries.
+
+    Args:
+        query: The SQL SELECT query string.
+        params: Optional query parameters (use %s placeholders in the query).
+
+    Returns:
+        A list of dictionaries, where each dictionary represents a row and
+        keys are column names. Returns an empty list if no results are found.
+    """
+    return db_client.execute_query_dict(query, params)
 
 
 # =============================================================================
