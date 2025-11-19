@@ -8,6 +8,7 @@ dependencies = [
     "fastapi-mcp>=0.3.4",
     "pymssql>=2.3.0",
     "python-dotenv>=1.0.0",
+    "google-cloud-aiplatform>=1.58.0",
 ]
 
 [tool.basedpyright]

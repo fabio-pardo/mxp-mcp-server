@@ -33,12 +33,17 @@ from shared.mxp_client import (
     get_sailor_manifest,
 )
 from shared import db_client
+from shared.rag_client import RagClient
 
 # Initialize MCP server
 mcp = FastMCP(
     "Virgin Voyages MXP",
     description="MCP server providing access to Virgin Voyages MXP system data",
 )
+
+
+# Initialize clients
+rag_client = RagClient()
 
 
 @mcp.tool()
@@ -331,6 +336,40 @@ def crew_report() -> str:
     3. Any staffing gaps or concerns
     4. Crew performance highlights
     5. Recommendations for crew management
+    """
+
+
+@mcp.prompt()
+def sql_query_from_natural_language(query: str) -> str:
+    """
+    Generates a prompt to convert a natural language query into a SQL query,
+    using context retrieved from the RAG corpus.
+    """
+    print(f"Retrieving RAG context for natural language query: '{query}'")
+    rag_response = rag_client.query(query)
+    rag_contexts = rag_response.get("contexts", [])
+
+    # Format the retrieved contexts into a string for the prompt
+    context_str = "\n".join([f"- {c.get('text', '')}" for c in rag_contexts])
+
+    return f"""
+    You are an expert SQL developer for the Virgin Voyages MXP system.
+    Your task is to convert the following user request into a precise, read-only SQL query.
+
+    **User Request:**
+    "{query}"
+
+    **To help you, here is some relevant context from the database documentation:**
+    {context_str}
+
+    **Based on the user's request and the context above, you MUST generate a single,
+    executable SQL SELECT statement and use the `execute_read_only_query` tool to run it.**
+
+    **CRITICAL RULES:**
+    1. ALWAYS use `WITH (NOLOCK)` on all tables to prevent deadlocks.
+    2. Pay close attention to the column names, data types, and table relationships
+       described in the context.
+    3. Only generate a single `execute_read_only_query` tool call.
     """
 
 
